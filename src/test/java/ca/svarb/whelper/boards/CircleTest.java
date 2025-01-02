@@ -1,11 +1,11 @@
-package ca.svarb.whelper;
+package ca.svarb.whelper.boards;
 
 import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
 
-public class OffsetGridTest {
+public class CircleTest {
 
 	private OffsetGrid wgrid;
 

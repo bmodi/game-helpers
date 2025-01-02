@@ -1,4 +1,4 @@
-package ca.svarb.whelper;
+package ca.svarb.whelper.boards;
 
 import java.awt.Dimension;
 import java.util.ArrayList;
@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import ca.svarb.utils.ArgumentChecker;
+import ca.svarb.whelper.Path;
 
 public abstract class AbstractGridGameBoard extends ArrayList<Cell> implements IGameBoard {
 

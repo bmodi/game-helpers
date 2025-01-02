@@ -57,7 +57,7 @@ function addHighlightCanvasClickListener() {
 }
 
 function highlightCell(index) {
-    var angle = (2 * Math.PI / 5) * index - Math.PI / 2;
+    var angle = (2 * Math.PI / 5) * index - Math.PI / 2; // Adjust to start at 12:00
     var cellCenterX = 200 + 100 * Math.cos(angle);
     var cellCenterY = 200 + 100 * Math.sin(angle);
 

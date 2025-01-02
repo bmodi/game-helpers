@@ -8,6 +8,8 @@ import java.util.TreeSet;
 
 import org.springframework.stereotype.Component;
 
+import ca.svarb.whelper.boards.IGameBoard;
+
 @Component
 public class WordSearcher {
 

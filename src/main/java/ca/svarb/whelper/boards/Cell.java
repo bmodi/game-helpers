@@ -1,4 +1,4 @@
-package ca.svarb.whelper;
+package ca.svarb.whelper.boards;
 
 import java.util.Collections;
 import java.util.HashSet;

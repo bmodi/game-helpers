@@ -1,31 +1,36 @@
-package ca.svarb.whelper;
-
+package ca.svarb.whelper.boards;
 
 /**
- * An OffsetGrid stores a set of Cells in an set of
- * columns offset from each other by 1/2 Cell width.
+ * A Grid stores a set of Cells in a square arrangement.
  * All Cells by default contain blank string ("").
  * Cells can be accessed by [col,row] values (0 indexed)
  * or iterated through.
  */
-public class OffsetGrid extends AbstractGridGameBoard {
+public class Grid extends AbstractGridGameBoard {
 
 	/**
-	 * Make an offset-square grid of blank Cells.
+	 * Makes a grid with default size of 5
+	 */
+	public Grid() {
+		this(5);
+	}
+	
+	/**
+	 * Make a square grid of blank Cells.
 	 * Cells will be initialized with neighbours according
 	 * to grid position.
 	 * @param size
 	 */
-	public OffsetGrid(int size) {
+	public Grid(int size) {
 		super();
 		setSize(size);
 	}
 
 	/**
-	 * Create an OffsetGrid filled with given strings into the cells
+	 * Create a Grid filled with given strings into the cells
 	 * @param gridStrings
 	 */
-	public OffsetGrid(String[][] gridStrings) {
+	public Grid(String[][] gridStrings) {
 		super(gridStrings);
 	}
 
@@ -37,34 +42,26 @@ public class OffsetGrid extends AbstractGridGameBoard {
 	@Override
 	protected void initCell(int col, int row) {
 		Cell currentCell=this.getCell(col, row);
-		boolean even = col%2==0;
-		boolean odd = !even;
-		// Neighbours
+		
 		if(col>0) {
 			Cell left=this.getCell(col-1, row);
 			currentCell.addNeighbour(left);
-			if ( odd && row<this.size-1 ) {
+			currentCell.setLeftCell(left);
+			if(row<this.size-1) {
 				Cell belowLeft=this.getCell(col-1, row+1);
 				currentCell.addNeighbour(belowLeft);
-			} else if (row>0) {
-				Cell aboveLeft=this.getCell(col-1, row-1);
-				currentCell.addNeighbour(aboveLeft);
 			}
 		}
 		if(row>0) {
 			Cell above=this.getCell(col, row-1);
 			currentCell.addNeighbour(above);
+			currentCell.setUpCell(above);
+			if(col>0) {
+				Cell aboveLeft=this.getCell(col-1, row-1);
+				currentCell.addNeighbour(aboveLeft);
+			}
 		}
 
-		// Navigation
-		if(col>0) {
-			Cell left=this.getCell(col-1, row);
-			currentCell.setLeftCell(left);
-		}
-		if(row>0) {
-			Cell above=this.getCell(col, row-1);
-			currentCell.setUpCell(above);
-		}
 		if (row==this.size-1) {
 			Cell topCell=this.getCell(col, 0);
 			currentCell.setDownCell(topCell);
@@ -73,5 +70,6 @@ public class OffsetGrid extends AbstractGridGameBoard {
 			Cell leftEdgeCell=this.getCell(0, row);
 			currentCell.setRightCell(leftEdgeCell);
 		}
+
 	}
 }

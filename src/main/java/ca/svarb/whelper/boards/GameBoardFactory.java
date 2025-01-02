@@ -1,8 +1,8 @@
-package ca.svarb.whelper;
+package ca.svarb.whelper.boards;
 
 public class GameBoardFactory {
 
-	public enum BoardType { GRID, OFFSET_GRID };
+	public enum BoardType { GRID, OFFSET_GRID, CIRCLE, SQUARE_EDGE };
 	
 	// Hide constructor to enforce singleton
 	private GameBoardFactory() {}
@@ -22,6 +22,12 @@ public class GameBoardFactory {
 			break;
 		case OFFSET_GRID:
 			board=new OffsetGrid(size);
+			break;
+		case CIRCLE:
+			board=new Circle(size);
+			break;
+		case SQUARE_EDGE:
+			board=new SquareEdge(size);
 			break;
 		}
 		return board;

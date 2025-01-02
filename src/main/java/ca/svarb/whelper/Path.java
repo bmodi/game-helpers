@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import ca.svarb.utils.ArgumentChecker;
+import ca.svarb.whelper.boards.Cell;
 
 /**
  * A path is essentially an ArrayList<Cell>.

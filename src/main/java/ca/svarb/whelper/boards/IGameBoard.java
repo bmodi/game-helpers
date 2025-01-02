@@ -1,6 +1,8 @@
-package ca.svarb.whelper;
+package ca.svarb.whelper.boards;
 
 import java.util.List;
+
+import ca.svarb.whelper.Path;
 
 public interface IGameBoard extends List<Cell> {
 

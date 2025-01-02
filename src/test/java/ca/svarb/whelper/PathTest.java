@@ -10,6 +10,9 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import ca.svarb.whelper.boards.Cell;
+import ca.svarb.whelper.boards.Grid;
+
 
 public class PathTest {
 

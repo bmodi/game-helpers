@@ -8,6 +8,11 @@ import static org.junit.Assert.assertFalse;
 import java.util.SortedSet;
 
 import org.junit.Test;
+
+import ca.svarb.whelper.boards.Grid;
+import ca.svarb.whelper.boards.IGameBoard;
+import ca.svarb.whelper.boards.OffsetGrid;
+
 import org.junit.Before;
 
 public class WordSearcherTest {

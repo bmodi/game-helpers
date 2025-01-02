@@ -7,7 +7,7 @@ import org.codehaus.jackson.annotate.JsonAutoDetect;
 @JsonAutoDetect
 public class Grid {
 	
-	public enum GridType { GRID, OFFSET_GRID };
+	public enum GridType { GRID, OFFSET_GRID, CIRCLE, SQUARE_EDGE };
 
 	private String cells[][]=null;
 	private GridType gridType;

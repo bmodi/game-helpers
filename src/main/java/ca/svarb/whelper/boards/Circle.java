@@ -1,5 +1,4 @@
-package ca.svarb.whelper;
-
+package ca.svarb.whelper.boards;
 
 /**
  * A Grid stores a set of Cells in a square arrangement.
@@ -7,12 +6,12 @@ package ca.svarb.whelper;
  * Cells can be accessed by [col,row] values (0 indexed)
  * or iterated through.
  */
-public class Grid extends AbstractGridGameBoard {
+public class Circle extends AbstractGridGameBoard {
 
 	/**
 	 * Makes a grid with default size of 5
 	 */
-	public Grid() {
+	public Circle() {
 		this(5);
 	}
 	
@@ -22,7 +21,7 @@ public class Grid extends AbstractGridGameBoard {
 	 * to grid position.
 	 * @param size
 	 */
-	public Grid(int size) {
+	public Circle(int size) {
 		super();
 		setSize(size);
 	}
@@ -31,7 +30,7 @@ public class Grid extends AbstractGridGameBoard {
 	 * Create a Grid filled with given strings into the cells
 	 * @param gridStrings
 	 */
-	public Grid(String[][] gridStrings) {
+	public Circle(String[][] gridStrings) {
 		super(gridStrings);
 	}
 

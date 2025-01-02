@@ -1,4 +1,4 @@
-package ca.svarb.whelper;
+package ca.svarb.whelper.boards;
 
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
@@ -9,6 +9,8 @@ import java.util.Collection;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import ca.svarb.whelper.boards.Cell;
 
 
 public class CellTest {

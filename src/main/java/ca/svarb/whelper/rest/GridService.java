@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ca.svarb.whelper.Dictionary;
 import ca.svarb.whelper.DictionaryLoader;
-import ca.svarb.whelper.IGameBoard;
 import ca.svarb.whelper.WordSearcher;
+import ca.svarb.whelper.boards.IGameBoard;
 import ca.svarb.whelper.WhelperException;
 
 @RestController
-@RequestMapping("/api/grid") // Updated to include the /api prefix
+@RequestMapping("/api/grid")
 public class GridService {
 
     private Dictionary dictionary = null;
@@ -39,9 +39,9 @@ public class GridService {
         System.out.println("grid=" + grid);
         IGameBoard board = null;
         if (grid.getGridType() == Grid.GridType.GRID) {
-            board = new ca.svarb.whelper.Grid(grid.getCells());
+            board = new ca.svarb.whelper.boards.Grid(grid.getCells());
         } else {
-            board = new ca.svarb.whelper.OffsetGrid(grid.getCells());
+            board = new ca.svarb.whelper.boards.OffsetGrid(grid.getCells());
         }
         return wordSearcher.findWords(dictionary, board);
     }
