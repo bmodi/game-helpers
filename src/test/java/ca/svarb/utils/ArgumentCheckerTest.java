@@ -4,8 +4,6 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import ca.svarb.utils.ArgumentChecker;
-
 public class ArgumentCheckerTest {
 
     @Test
