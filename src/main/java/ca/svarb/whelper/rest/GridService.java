@@ -18,7 +18,7 @@ import ca.svarb.whelper.WordSearcher;
 import ca.svarb.whelper.WhelperException;
 
 @RestController
-@RequestMapping("/grid")
+@RequestMapping("/api/grid") // Updated to include the /api prefix
 public class GridService {
 
     private Dictionary dictionary = null;
