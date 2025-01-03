@@ -7,23 +7,23 @@ import org.junit.Test;
 
 public class CircleTest {
 
-	private OffsetGrid wgrid;
+	private Circle circleBoard;
 
 	@Before
 	public void setup() {
-		wgrid = new OffsetGrid(6);
-		wgrid.getCell(2,1).setValue("A");
-		wgrid.getCell(0,0).setValue("");
+		circleBoard = new Circle(5);
+		circleBoard.getCell(2,0).setValue("A");
+		circleBoard.getCell(4,0).setValue("");
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void constructZero() {
-		new Grid(0);
+		new Circle(0);
 	}
 
 	@Test(expected=IllegalArgumentException.class)
 	public void constructNegative() {
-		new Grid(-1);
+		new Circle(-1);
 	}
 
 	/**
@@ -31,13 +31,13 @@ public class CircleTest {
 	 */
 	@Test
 	public void getCell() {
-		assertSame( wgrid.getCell(0, 0), wgrid.getCell(1, 0).getLeftCell() );
-		assertSame( wgrid.getCell(1, 0), wgrid.getCell(0, 0).getRightCell() );
+		assertSame( circleBoard.getCell(0, 0), circleBoard.getCell(1, 0).getLeftCell() );
+		assertSame( circleBoard.getCell(1, 0), circleBoard.getCell(0, 0).getRightCell() );
 
 		// Last cell on the row wraps around to the left
-		assertSame( wgrid.getCell(0, 0), wgrid.getCell(5, 0).getRightCell() );
+		assertSame( circleBoard.getCell(0, 0), circleBoard.getCell(4, 0).getRightCell() );
 
 		// Last cell on the col wraps around to top
-		assertSame( wgrid.getCell(0, 0), wgrid.getCell(0, 5).getDownCell() );
+		assertSame( circleBoard.getCell(0, 0), circleBoard.getCell(0, 4).getDownCell() );
 	}
 }
