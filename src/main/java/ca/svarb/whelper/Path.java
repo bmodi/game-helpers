@@ -17,8 +17,14 @@ import ca.svarb.whelper.boards.Cell;
 public class Path {
 
 	private ArrayList<Cell> cells;
+	private boolean allowRepeatCells;
 
 	public Path() {
+		this(false);
+	}
+
+	public Path(boolean allowRepeatCells) {
+		this.allowRepeatCells = allowRepeatCells;
 		this.cells=new ArrayList<Cell>();
 	}
 
@@ -32,7 +38,7 @@ public class Path {
 	 */
 	public void addCell(Cell cell) {
 		ArgumentChecker.checkNulls("cell", cell);
-		if( cells.contains(cell) ) {
+		if( cells.contains(cell) && !this.allowRepeatCells ) {
 			throw new IllegalArgumentException("Cannot add a cell to path twice");
 		}
 		cells.add(cell);
@@ -41,9 +47,10 @@ public class Path {
 	/**
 	 * Return a list of paths created by starting with this
 	 * path and adding all the neighbours of the last Cell
-	 * on the path.  Will not return Paths that cross over
-	 * itself.  Will not explore paths where the neighbour
+	 * on the path.  Will not explore paths where the neighbour
 	 * is an empty (blank string) Cell.
+	 * If this Path allows repeat cells then the paths returned
+	 * may contain cells already found in the path.
 	 * @return Next available paths.  Will be empty list if
 	 *         no more paths are available, but will not 
 	 *         return null.
@@ -52,9 +59,9 @@ public class Path {
 		List<Path> nextPaths=new ArrayList<Path>();
 		Set<Cell> lastCellNeighbours=cells.get(cells.size()-1).getNeighbours();
 		for (Cell neighbour : lastCellNeighbours) {
-			if ( !cells.contains(neighbour) &&
+			if ( (!cells.contains(neighbour) || this.allowRepeatCells) &&
 					!neighbour.getValue().equals("")) {
-				Path path = new Path();
+				Path path = new Path(this.allowRepeatCells);
 				path.cells=new ArrayList<Cell>(cells);
 				path.cells.add(neighbour);
 				nextPaths.add(path);

@@ -3,6 +3,7 @@ package ca.svarb.whelper;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -11,8 +12,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ca.svarb.whelper.boards.Cell;
+import ca.svarb.whelper.boards.Circle;
 import ca.svarb.whelper.boards.Grid;
-
 
 public class PathTest {
 
@@ -22,12 +23,19 @@ public class PathTest {
 	private Cell c4;
 	private Path path1;
 	private Path path2;
+	private Path circlePath;
 
-	private static String[][] gridStrings = { { "c", "a", "t" },
-                                             { "h", "o", "g" },
-                                             { "d", "o", "g" } };
-	
+	private static String[][] gridStrings = {
+			{ "c", "a", "t" },
+			{ "h", "o", "g" },
+			{ "d", "o", "g" } };
+	private static String[][] circleStrings = {
+			{ "c", "", "" },
+			{ "a", "", "" },
+			{ "t", "", "" } };
+
 	private Grid grid;
+	private Circle circle;
 
 	private Cell cell00;
 	private Cell cell01;
@@ -41,6 +49,18 @@ public class PathTest {
 
 	@Before
 	public void setup() {
+		// Setup path1
+		c1 = new Cell("a");
+		c2 = new Cell("pp");
+		c3 = new Cell("");
+		c4 = new Cell("le");
+		path1 = new Path();
+		path1.addCell(c1);
+		path1.addCell(c2);
+		path1.addCell(c3);
+		path1.addCell(c4);
+
+		// Setup path2 with first cell (0,0) from grid
 		grid = new Grid(gridStrings);
 		cell00 = grid.getCell(0, 0);
 		cell01 = grid.getCell(0, 1);
@@ -54,82 +74,102 @@ public class PathTest {
 		path2 = new Path();
 		path2.addCell(cell00);
 
-		c1 = new Cell("a");
-		c2 = new Cell("pp");
-		c3 = new Cell("");
-		c4 = new Cell("le");
-		path1 = new Path();
-		path1.addCell(c1);
-		path1.addCell(c2);
-		path1.addCell(c3);
-		path1.addCell(c4);
+		// Setup path for checking traversals
+		circlePath = new Path(true);
+		circle = new Circle(circleStrings);
+		circlePath.addCell(circle.getCell(0, 0));
 	}
-
 
 	@Test
 	public void getCells() {
 		assertEquals(4, path1.getCells().size());
 	}
 
-	@Test(expected=IllegalArgumentException.class)
-	public void crossPath() {
-		path1.addCell(c2);
+	@Test
+	public void addCellWithRepeatCellsNotAllowedThrowsException() {
+	    assertThrows(IllegalArgumentException.class, () -> path1.addCell(c2));
+	}
+
+	@Test
+	public void addCellWithRepeatCellsAllowed() {
+		Path pathWithRepeatCellsAllowed = new Path(true);
+		pathWithRepeatCellsAllowed.addCell(c1);
+		pathWithRepeatCellsAllowed.addCell(c2);
+		pathWithRepeatCellsAllowed.addCell(c3);
+		pathWithRepeatCellsAllowed.addCell(c4);
+		
+		// This is a repeated cell
+		pathWithRepeatCellsAllowed.addCell(c2);
 	}
 
 	@Test
 	public void nextPaths() {
 		List<Path> nextPaths = path2.nextPaths();
 		assertEquals(3, nextPaths.size());
-		boolean found01=false;
-		boolean found10=false;
-		boolean found11=false;
-		Path path01=null;
+		boolean found01 = false;
+		boolean found10 = false;
+		boolean found11 = false;
+		Path path01 = null;
 		for (Path path : nextPaths) {
 			assertEquals(2, path.getCells().size());
 			assertSame(cell00, path.getCells().get(0));
-			Cell cell2=path.getCells().get(1);
-			if(cell2==cell01) {
-				found01=true;
-				path01=path;
+			Cell cell2 = path.getCells().get(1);
+			if (cell2 == cell01) {
+				found01 = true;
+				path01 = path;
 			}
-			if(cell2==cell10) found10=true;
-			if(cell2==cell11) found11=true;
+			if (cell2 == cell10)
+				found10 = true;
+			if (cell2 == cell11)
+				found11 = true;
 		}
 		assertTrue(found01);
 		assertTrue(found10);
 		assertTrue(found11);
-		
+
 		// Make sure next level of paths does not include cells already in the path
 		List<Path> nextPaths2 = path01.nextPaths();
 		assertEquals(4, nextPaths2.size());
-		boolean found01_10=false;
-		boolean found01_11=false;
-		boolean found01_12=false;
-		boolean found01_02=false;
+		boolean found01_10 = false;
+		boolean found01_11 = false;
+		boolean found01_12 = false;
+		boolean found01_02 = false;
 		for (Path path : nextPaths2) {
 			assertEquals(3, path.getCells().size());
 			assertSame(cell00, path.getCells().get(0));
 			assertSame(cell01, path.getCells().get(1));
-			Cell cell3=path.getCells().get(2);
-			if(cell3==cell10) found01_10=true;
-			if(cell3==cell11) found01_11=true;
-			if(cell3==cell12) found01_12=true;
-			if(cell3==cell02) found01_02=true;
+			Cell cell3 = path.getCells().get(2);
+			if (cell3 == cell10)
+				found01_10 = true;
+			if (cell3 == cell11)
+				found01_11 = true;
+			if (cell3 == cell12)
+				found01_12 = true;
+			if (cell3 == cell02)
+				found01_02 = true;
 		}
 		assertTrue(found01_10);
 		assertTrue(found01_11);
 		assertTrue(found01_12);
 		assertTrue(found01_02);
 	}
+
+	@Test
+	public void nextPathsWhenRepeatCellsAllowed() {
+		List<Path> nextPaths = circlePath.nextPaths();
+
+		// Make sure next level of paths allows cells already in the path
+		List<Path> nextPaths2 = nextPaths.get(0).nextPaths();
+		assertEquals(2, nextPaths2.size());
+	}	
 	
 	/**
-	 * Make sure when there are no more neighbours
-	 * that aren't already used that there are no
-	 * more paths to return.
+	 * Make sure when there are no more neighbours that aren't already used that
+	 * there are no more paths to return.
 	 */
 	@Test
 	public void nextPathsEnd() {
-		Path path=new Path();
+		Path path = new Path();
 		path.addCell(cell21);
 		path.addCell(cell11);
 		path.addCell(cell12);
@@ -137,49 +177,48 @@ public class PathTest {
 		List<Path> nextPaths = path.nextPaths();
 		assertEquals(0, nextPaths.size());
 	}
-	
+
 	@Test
 	public void getWord() {
 		assertEquals("apple", path1.getWord());
 	}
-	
+
 	@Test
 	public void toString_equalsGetWord() {
 		assertEquals("apple", path1.toString());
-	}	
+	}
 
 	@Test
 	public void getWordEmptyPath() {
-		Path path=new Path();
+		Path path = new Path();
 		assertEquals("", path.getWord());
 	}
 
 	/**
-	 * Check for bug where nextPaths() method traverses
-	 * blank cells.
-	 * Blanking the centre cell should prevent "cog" from
-	 * being found from this path:
-	 * C00 + C11 + C12 + C22
-	 * "c" + ""  + "o" + "g" = "cog"
-	 * Traversal should stop when it hits a blank cell.
+	 * Check for bug where nextPaths() method traverses blank cells. Blanking the
+	 * centre cell should prevent "cog" from being found from this path: C00 + C11 +
+	 * C12 + C22 "c" + "" + "o" + "g" = "cog" Traversal should stop when it hits a
+	 * blank cell.
 	 */
 	@Test
 	public void nextPathsStopsAtBlankCells() {
 		cell11.setValue("");
 		List<Path> nextPaths = path2.nextPaths();
 		assertEquals(2, nextPaths.size());
-		boolean found01=false;
-		boolean found10=false;
-		boolean found11=false;
+		boolean found01 = false;
+		boolean found10 = false;
+		boolean found11 = false;
 		for (Path path : nextPaths) {
 			assertEquals(2, path.getCells().size());
 			assertSame(cell00, path.getCells().get(0));
-			Cell cell2=path.getCells().get(1);
-			if(cell2==cell01) {
-				found01=true;
+			Cell cell2 = path.getCells().get(1);
+			if (cell2 == cell01) {
+				found01 = true;
 			}
-			if(cell2==cell10) found10=true;
-			if(cell2==cell11) found11=true;
+			if (cell2 == cell10)
+				found10 = true;
+			if (cell2 == cell11)
+				found11 = true;
 		}
 		assertTrue(found01);
 		assertTrue(found10);

@@ -40,8 +40,10 @@ public class GridService {
         IGameBoard board = null;
         if (grid.getGridType() == Grid.GridType.GRID) {
             board = new ca.svarb.whelper.boards.Grid(grid.getCells());
-        } else {
+        } else if (grid.getGridType() == Grid.GridType.OFFSET_GRID) {
             board = new ca.svarb.whelper.boards.OffsetGrid(grid.getCells());
+        } else if (grid.getGridType() == Grid.GridType.CIRCLE) {
+            board = new ca.svarb.whelper.boards.Circle(grid.getCells());
         }
         return wordSearcher.findWords(dictionary, board);
     }
