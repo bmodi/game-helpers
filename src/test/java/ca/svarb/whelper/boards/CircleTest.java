@@ -2,8 +2,12 @@ package ca.svarb.whelper.boards;
 
 import static org.junit.Assert.*;
 
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
+
+import ca.svarb.whelper.Path;
 
 public class CircleTest {
 
@@ -57,6 +61,12 @@ public class CircleTest {
 		assertEquals(4, cell2.getNeighbours().size());
 		assertEquals(4, cell3.getNeighbours().size());
 		assertEquals(4, cell4.getNeighbours().size());
-		
 	}
+
+	@Test
+	public void pathsDoNotAllowRepeatCells() {
+		List<Path> initialPaths = circleBoard.getInitialPaths();
+		assertTrue(initialPaths.get(0).getRepeatCellsAllowed());
+	}
+
 }

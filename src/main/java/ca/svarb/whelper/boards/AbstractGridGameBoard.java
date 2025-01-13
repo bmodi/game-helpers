@@ -45,9 +45,11 @@ public abstract class AbstractGridGameBoard extends ArrayList<Cell> implements I
 	public List<Path> getInitialPaths() {
 		List<Path> paths = new ArrayList<Path>();
 		for (Cell cell : this) {
-			Path path = new Path();
-			path.addCell(cell);
-			paths.add(path);
+			if ( !cell.getValue().isEmpty() ) {
+				Path path = new Path(this.getRepeatCellsAllowed());
+				path.addCell(cell);
+				paths.add(path);
+			}
 		}
 		return paths;
 	}
@@ -149,4 +151,9 @@ public abstract class AbstractGridGameBoard extends ArrayList<Cell> implements I
 	}
 
 	abstract protected void initCell(int col, int row);
+	
+	@Override
+	public boolean getRepeatCellsAllowed() {
+		return false;
+	}
 }

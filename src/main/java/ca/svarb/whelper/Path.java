@@ -90,4 +90,8 @@ public class Path {
 	public String toString() {
 		return this.getWord();
 	}
+
+	public boolean getRepeatCellsAllowed() {
+		return allowRepeatCells;
+	}
 }

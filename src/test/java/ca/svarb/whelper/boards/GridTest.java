@@ -14,22 +14,20 @@ import ca.svarb.whelper.Path;
 
 public class GridTest {
 
-	public static String[][] gridStrings = { { "c", "a", "t" },
-                                             { "h", "o", "g" },
-                                             { "d", "o", "g" } };
-
-	private Grid wgrid;
-	private Grid grid;
-	private Cell cell00;
-	private Cell cell01;
+	private Grid sparseGrid;
+	private Grid fullGrid;
 
 	@Before
 	public void setup() {
-		wgrid = new Grid(3);
-		wgrid.getCell(2,1).setValue("A");
-		grid = new Grid(gridStrings);
-		cell00 = grid.getCell(0, 0);
-		cell01 = grid.getCell(0, 1);
+		sparseGrid = new Grid(3);
+		sparseGrid.getCell(2,1).setValue("A");
+		
+		String[][] gridStrings = {
+				{ "c", "a", "t" },
+                { "h", "o", "g" },
+                { "d", "o", "g" } };
+
+		fullGrid = new Grid(gridStrings);
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
@@ -44,8 +42,8 @@ public class GridTest {
 
 	@Test
 	public void constructFromStrings2D() {
-		assertEquals("h", cell01.getValue());
-		assertEquals("c", cell00.getValue());
+		assertEquals("h", fullGrid.getCell(0, 1).getValue());
+		assertEquals("c", fullGrid.getCell(0, 0).getValue());
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
@@ -58,58 +56,58 @@ public class GridTest {
 	 */
 	@Test
 	public void getCell() {
-		assertEquals("A", wgrid.getCell(2,1).getValue());
-		assertEquals("", wgrid.getCell(1, 1).getValue());
-		assertEquals("", wgrid.getCell(0, 0).getValue());
-		assertEquals(5, wgrid.getCell(1, 0).getNeighbours().size());
-		assertEquals(3, wgrid.getCell(2, 0).getNeighbours().size());
-		assertEquals(8, wgrid.getCell(1, 1).getNeighbours().size());
+		assertEquals("A", sparseGrid.getCell(2,1).getValue());
+		assertEquals("", sparseGrid.getCell(1, 1).getValue());
+		assertEquals("", sparseGrid.getCell(0, 0).getValue());
+		assertEquals(5, sparseGrid.getCell(1, 0).getNeighbours().size());
+		assertEquals(3, sparseGrid.getCell(2, 0).getNeighbours().size());
+		assertEquals(8, sparseGrid.getCell(1, 1).getNeighbours().size());
 	}
 
 	@Test(expected=IllegalArgumentException.class)
 	public void getCellLowCol() {
-		wgrid.getCell(-1,1);
+		sparseGrid.getCell(-1,1);
 	}
 
 	@Test(expected=IllegalArgumentException.class)
 	public void getCellHighCol() {
-		wgrid.getCell(3,1);
+		sparseGrid.getCell(3,1);
 	}
 
 	@Test(expected=IllegalArgumentException.class)
 	public void getCellLowRow() {
-		wgrid.getCell(2,-1);
+		sparseGrid.getCell(2,-1);
 	}
 
 	@Test(expected=IllegalArgumentException.class)
 	public void getCellHighRow() {
-		wgrid.getCell(2,3);
+		sparseGrid.getCell(2,3);
 	}
 
 	@Test
 	public void setSize() {
-		wgrid.setSize(4);
-		assertEquals(4, wgrid.getSize());
+		sparseGrid.setSize(4);
+		assertEquals(4, sparseGrid.getSize());
 		// Check that grid is reset to blanks and to new size
-		assertEquals("", wgrid.getCell(3,3).getValue());
-		assertEquals("", wgrid.getCell(2,1).getValue());
+		assertEquals("", sparseGrid.getCell(3,3).getValue());
+		assertEquals("", sparseGrid.getCell(2,1).getValue());
 	}
 
 	@Test
 	public void getCells() {
-		List<Cell> cells=wgrid.getCells();
+		List<Cell> cells=sparseGrid.getCells();
 		assertEquals(9, cells.size());
 	}
 	
 	@Test(expected=UnsupportedOperationException.class)
 	public void getCellsReturnsReadOnlyList() {
-		List<Cell> cells=wgrid.getCells();
+		List<Cell> cells=sparseGrid.getCells();
 		cells.add(null);
 	}
 
 	@Test
 	public void iterator() {
-		Iterator<Cell> iterator = wgrid.iterator();
+		Iterator<Cell> iterator = sparseGrid.iterator();
 		Cell cell=iterator.next();
 		assertEquals("", cell.getValue());
 		iterator.next();
@@ -126,7 +124,7 @@ public class GridTest {
 
 	@Test(expected=NoSuchElementException.class)
 	public void iteratorFinished() {
-		Iterator<Cell> iterator = wgrid.iterator();
+		Iterator<Cell> iterator = sparseGrid.iterator();
 		for( int i=0; i<9; i++ ) {
 			iterator.next();
 		}
@@ -136,17 +134,17 @@ public class GridTest {
 
 	@Test(expected=UnsupportedOperationException.class)
 	public void iteratorRemove() {
-		Iterator<Cell> iterator = wgrid.iterator();
+		Iterator<Cell> iterator = sparseGrid.iterator();
 		iterator.remove();
 	}
 	
 	@Test
 	public void getInitialPaths() {
-		List<Cell> cells=wgrid.getCells();
+		List<Cell> cells=fullGrid.getCells();
 		List<Cell> pathCells=new ArrayList<>();
 		// Check that all paths contain only one cell
 		// and that the cell is contained in the grid
-		List<Path> initialPaths = wgrid.getInitialPaths();
+		List<Path> initialPaths = fullGrid.getInitialPaths();
 		assertEquals(9, initialPaths.size());
 		for (Path path : initialPaths) {
 			assertEquals(1, path.getCells().size());
@@ -155,27 +153,38 @@ public class GridTest {
 			assertTrue(cells.contains(cell));
 			pathCells.add(cell);
 		}
-		assertSame(wgrid.getCell(0, 0), initialPaths.get(0).getCells().get(0));
-		assertSame(wgrid.getCell(2, 0), initialPaths.get(6).getCells().get(0));
+		assertSame(fullGrid.getCell(0, 0), initialPaths.get(0).getCells().get(0));
+		assertSame(fullGrid.getCell(2, 0), initialPaths.get(6).getCells().get(0));
 
 		// Check that all the cells are found in the path cell list
 		assertTrue(pathCells.containsAll(cells));
 	}
+
+	@Test
+	public void getInitialPathsDoesNotContainEmptyCells() {
+		List<Path> initialPaths = sparseGrid.getInitialPaths();
+		assertEquals(1, initialPaths.size());
+	}
+
+	@Test
+	public void pathsDoNotAllowRepeatCells() {
+		List<Path> initialPaths = sparseGrid.getInitialPaths();
+		assertFalse(initialPaths.get(0).getRepeatCellsAllowed());
+	}
 	
 	@Test
 	public void findWord() {
-		Grid grid = new Grid(gridStrings);
-		Path wordPath = grid.findWord("hat");
+		Path wordPath = fullGrid.findWord("hat");
 		assertEquals(3, wordPath.getCells().size());
-		assertSame(grid.getCell(0, 1), wordPath.getCells().get(0));
-		assertSame(grid.getCell(1, 0), wordPath.getCells().get(1));
-		assertSame(grid.getCell(2, 0), wordPath.getCells().get(2));
+		assertSame(fullGrid.getCell(0, 1), wordPath.getCells().get(0));
+		assertSame(fullGrid.getCell(1, 0), wordPath.getCells().get(1));
+		assertSame(fullGrid.getCell(2, 0), wordPath.getCells().get(2));
 	}
 
 	@Test
 	public void findWordNotFound() {
-		assertNull( wgrid.findWord("hop") );  // Partial word
-		assertNull( wgrid.findWord("hats") ); // Incomplete word
-		assertNull( wgrid.findWord("zim") );  // No letters match
+		assertNull( sparseGrid.findWord("hop") );  // Partial word
+		assertNull( sparseGrid.findWord("hats") ); // Incomplete word
+		assertNull( sparseGrid.findWord("zim") );  // No letters match
 	}
 }

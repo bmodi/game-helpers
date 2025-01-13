@@ -68,6 +68,10 @@ public class Circle extends AbstractGridGameBoard {
 		for( int i=0; i<this.size-1; i++) {
 			if(i!=row) currentCell.addNeighbour( this.getCell(col, i) );
 		}
-		
+	}
+
+	@Override
+	public boolean getRepeatCellsAllowed() {
+		return true;
 	}
 }

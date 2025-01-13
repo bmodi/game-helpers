@@ -19,4 +19,6 @@ public interface IGameBoard extends List<Cell> {
 	public void clearSelection();
 
 	public Path findWord(String selectedValue);
+	
+	public boolean getRepeatCellsAllowed();
 }
