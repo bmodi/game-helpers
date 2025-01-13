@@ -136,9 +136,13 @@ public abstract class AbstractGridGameBoard extends ArrayList<Cell> implements I
 		cellList=new ArrayList<Cell>(size*size);
 		for (int col = 0; col < size; col++) {
 			for (int row = 0; row < size; row++) {
-				Cell currentCell=new Cell();
-				cells[col][row]=currentCell;
-				cellList.add(currentCell);
+				cells[col][row]=new Cell();
+				cellList.add(cells[col][row]);
+			}
+		}
+		
+		for (int col = 0; col < size; col++) {
+			for (int row = 0; row < size; row++) {
 				initCell(col, row);
 			}
 		}

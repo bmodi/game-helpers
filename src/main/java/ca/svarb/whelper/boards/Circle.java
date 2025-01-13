@@ -49,21 +49,11 @@ public class Circle extends AbstractGridGameBoard {
 		
 		if(col>0) {
 			Cell left=this.getCell(col-1, row);
-			currentCell.addNeighbour(left);
 			currentCell.setLeftCell(left);
-			if(row<this.size-1) {
-				Cell belowLeft=this.getCell(col-1, row+1);
-				currentCell.addNeighbour(belowLeft);
-			}
 		}
 		if(row>0) {
 			Cell above=this.getCell(col, row-1);
-			currentCell.addNeighbour(above);
 			currentCell.setUpCell(above);
-			if(col>0) {
-				Cell aboveLeft=this.getCell(col-1, row-1);
-				currentCell.addNeighbour(aboveLeft);
-			}
 		}
 
 		if (row==this.size-1) {
@@ -75,5 +65,9 @@ public class Circle extends AbstractGridGameBoard {
 			currentCell.setRightCell(leftEdgeCell);
 		}
 
+		for( int i=0; i<this.size-1; i++) {
+			if(i!=row) currentCell.addNeighbour( this.getCell(col, i) );
+		}
+		
 	}
 }

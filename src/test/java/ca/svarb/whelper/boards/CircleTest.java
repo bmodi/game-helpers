@@ -27,10 +27,10 @@ public class CircleTest {
 	}
 
 	/**
-	 * Check that values and neighbours are set correctly
+	 * Check that navigation are set correctly
 	 */
 	@Test
-	public void getCell() {
+	public void getCellNavigation() {
 		assertSame( circleBoard.getCell(0, 0), circleBoard.getCell(1, 0).getLeftCell() );
 		assertSame( circleBoard.getCell(1, 0), circleBoard.getCell(0, 0).getRightCell() );
 
@@ -39,5 +39,24 @@ public class CircleTest {
 
 		// Last cell on the col wraps around to top
 		assertSame( circleBoard.getCell(0, 0), circleBoard.getCell(0, 4).getDownCell() );
+	}
+
+	/**
+	 * Check that neighbours are set correctly
+	 */
+	@Test
+	public void getCellNeighbours() {
+		Cell cell0 = circleBoard.getCell(0, 0);
+		Cell cell1 = circleBoard.getCell(1, 0);
+		Cell cell2 = circleBoard.getCell(2, 0);
+		Cell cell3 = circleBoard.getCell(3, 0);
+		Cell cell4 = circleBoard.getCell(4, 0);
+		
+		assertEquals(4, cell0.getNeighbours().size());
+		assertEquals(4, cell1.getNeighbours().size());
+		assertEquals(4, cell2.getNeighbours().size());
+		assertEquals(4, cell3.getNeighbours().size());
+		assertEquals(4, cell4.getNeighbours().size());
+		
 	}
 }
