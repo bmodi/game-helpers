@@ -74,8 +74,9 @@ function highlightCell(index) {
     highlightContext.stroke();
 }
 
-function setCellText(index, text) {
-    var angle = (2 * Math.PI / 5) * index - Math.PI / 2; // Adjust to start at 12:00
+function setCellText(row, col, text) {
+	cells[row][0]=text;
+    var angle = (2 * Math.PI / 5) * row - Math.PI / 2; // Adjust to start at 12:00
     var cellCenterX = 200 + 100 * Math.cos(angle);
     var cellCenterY = 200 + 100 * Math.sin(angle);
 
@@ -92,5 +93,5 @@ function setCellText(index, text) {
     textContext.textBaseline = 'middle';
     textContext.fillText(text, cellCenterX, cellCenterY);
     textContext.stroke();
-    generateWords("CIRCLE_GRID");
+    generateWords("CIRCLE");
 }
